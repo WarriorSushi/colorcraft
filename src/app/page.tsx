@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { RefreshCw, Palette, Sparkles, ExternalLink, Keyboard } from 'lucide-react';
+import { RefreshCw, Palette, ExternalLink, Keyboard, Zap, Eye, Accessibility, Code2, Shuffle } from 'lucide-react';
 import { generatePalette, randomHex, type HarmonyType } from '@/lib/colors';
 import PaletteBar from '@/components/PaletteBar';
 import ColorEditor from '@/components/ColorEditor';
@@ -22,7 +22,7 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<'editor' | 'contrast' | 'blindness' | 'export'>('editor');
 
   const regenerate = useCallback(() => {
-    const base = locked.some(l => l) 
+    const base = locked.some(l => l)
       ? colors[locked.findIndex(l => l)] || randomHex()
       : randomHex();
     const newColors = generatePalette(base, harmony, 5);
@@ -30,34 +30,16 @@ export default function HomePage() {
   }, [harmony, locked, colors]);
 
   const handleColorChange = useCallback((index: number, color: string) => {
-    setColors(prev => {
-      const next = [...prev];
-      next[index] = color;
-      return next;
-    });
+    setColors(prev => { const next = [...prev]; next[index] = color; return next; });
   }, []);
 
   const handleToggleLock = useCallback((index: number) => {
-    setLocked(prev => {
-      const next = [...prev];
-      next[index] = !next[index];
-      return next;
-    });
+    setLocked(prev => { const next = [...prev]; next[index] = !next[index]; return next; });
   }, []);
 
   const handleReorder = useCallback((from: number, to: number) => {
-    setColors(prev => {
-      const next = [...prev];
-      const [moved] = next.splice(from, 1);
-      next.splice(to, 0, moved);
-      return next;
-    });
-    setLocked(prev => {
-      const next = [...prev];
-      const [moved] = next.splice(from, 1);
-      next.splice(to, 0, moved);
-      return next;
-    });
+    setColors(prev => { const n = [...prev]; const [m] = n.splice(from, 1); n.splice(to, 0, m); return n; });
+    setLocked(prev => { const n = [...prev]; const [m] = n.splice(from, 1); n.splice(to, 0, m); return n; });
   }, []);
 
   const handleHarmonyChange = useCallback((newHarmony: HarmonyType) => {
@@ -72,7 +54,7 @@ export default function HomePage() {
     setLocked(loadedColors.map(() => false));
   }, []);
 
-  // Keyboard shortcut: Space to regenerate
+  // Spacebar = regenerate (Coolors-style)
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.code === 'Space' && !['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) {
@@ -85,59 +67,54 @@ export default function HomePage() {
   }, [regenerate]);
 
   const TABS = [
-    { id: 'editor' as const, label: 'Editor' },
-    { id: 'contrast' as const, label: 'Contrast' },
-    { id: 'blindness' as const, label: 'Vision' },
-    { id: 'export' as const, label: 'Export' },
+    { id: 'editor' as const, label: 'Edit', icon: Palette },
+    { id: 'contrast' as const, label: 'Contrast', icon: Accessibility },
+    { id: 'blindness' as const, label: 'Vision', icon: Eye },
+    { id: 'export' as const, label: 'Export', icon: Code2 },
   ];
 
   return (
     <div className="min-h-screen bg-[#0a0a0b]">
-      {/* Header */}
-      <header className="border-b border-zinc-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-sky-500 flex items-center justify-center">
-              <Palette size={18} className="text-white" />
-            </div>
-            <div>
-              <h1 className="text-base font-semibold text-zinc-100 font-[var(--font-space)]">ColorCraft</h1>
-              <p className="text-[10px] text-zinc-500 hidden sm:block">Palette Generator & Contrast Checker</p>
-            </div>
+      {/* Compact header — tool-like, not website-like */}
+      <header className="border-b border-[#1e1e21] sticky top-0 z-40 bg-[#0a0a0b]/95 backdrop-blur-sm">
+        <div className="max-w-[1400px] mx-auto px-5 h-12 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <Palette size={17} className="text-teal-500" />
+            <span className="text-[13px] font-display font-semibold text-zinc-100 tracking-tight">ColorCraft</span>
+            <span className="text-[10px] text-zinc-600 font-mono ml-1 hidden sm:inline">v1.0</span>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-1.5 text-[10px] text-zinc-600 bg-zinc-800/30 px-2.5 py-1.5 rounded-lg border border-zinc-800/50">
-              <Keyboard size={12} />
-              Press <kbd className="bg-zinc-700/50 px-1 py-0.5 rounded text-zinc-400 font-mono">Space</kbd> to regenerate
-            </div>
+          <div className="flex items-center gap-4">
+            <span className="hidden md:flex items-center gap-1 text-[10px] text-zinc-600 font-mono">
+              <kbd className="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-500 border border-zinc-800">Space</kbd>
+              regenerate
+            </span>
             <a
               href="https://github.com/WarriorSushi/colorcraft"
-              target="_blank"
-              rel="noopener"
-              className="p-2 text-zinc-500 hover:text-zinc-300 transition-colors"
+              target="_blank" rel="noopener"
+              className="text-zinc-600 hover:text-zinc-400 transition-colors"
             >
-              <ExternalLink size={18} />
+              <ExternalLink size={14} />
             </a>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
-        {/* Controls row */}
-        <div className="flex flex-col sm:flex-row gap-3">
+      <main className="max-w-[1400px] mx-auto px-5 py-5 space-y-5">
+        {/* Controls — tight, tool-bar feel */}
+        <div className="flex flex-col sm:flex-row gap-2.5">
           <div className="flex-1">
             <HarmonySelector value={harmony} onChange={handleHarmonyChange} />
           </div>
           <button
             onClick={regenerate}
-            className="flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-400 text-zinc-900 font-medium rounded-xl px-6 py-2.5 text-sm transition-colors shadow-lg shadow-teal-500/20"
+            className="flex items-center justify-center gap-2 bg-zinc-100 hover:bg-white text-zinc-900 font-medium font-display rounded-lg px-5 py-2 text-[13px] transition-all active:scale-[0.98]"
           >
-            <RefreshCw size={16} />
+            <Shuffle size={14} />
             Generate
           </button>
         </div>
 
-        {/* Palette bar */}
+        {/* THE PALETTE — this is the hero, tall and dominant */}
         <PaletteBar
           colors={colors}
           locked={locked}
@@ -148,26 +125,30 @@ export default function HomePage() {
           selectedIndex={selectedIndex}
         />
 
-        {/* Tool tabs */}
-        <div className="flex gap-1 bg-[#111113] rounded-xl p-1 border border-zinc-800/50">
-          {TABS.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-colors ${
-                activeTab === tab.id
-                  ? 'bg-teal-500/15 text-teal-400 shadow-sm'
-                  : 'text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+        {/* Tab bar — compact, left-aligned */}
+        <div className="flex items-center gap-0.5 border-b border-[#1e1e21]">
+          {TABS.map(tab => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-1.5 px-3.5 py-2.5 text-[12px] font-medium transition-colors border-b-[1.5px] -mb-px ${
+                  activeTab === tab.id
+                    ? 'border-teal-500 text-zinc-100'
+                    : 'border-transparent text-zinc-500 hover:text-zinc-300'
+                }`}
+              >
+                <Icon size={13} />
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Tab content + saved palettes */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
+        {/* Content — asymmetric 2/3 + 1/3 layout */}
+        <div className="grid lg:grid-cols-[1fr_320px] gap-5">
+          <div>
             {activeTab === 'editor' && (
               <ColorEditor
                 color={colors[selectedIndex]}
@@ -188,28 +169,31 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Feature highlights */}
-        <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 border-t border-zinc-800/50">
+        {/* Feature strip — horizontal, dense, not a card grid */}
+        <div className="flex items-stretch gap-px mt-6 rounded-lg overflow-hidden border border-[#1e1e21]">
           {[
-            { icon: '🎨', title: '7 Harmony Rules', desc: 'Complementary, analogous, triadic, split-complementary, tetradic, monochromatic, random' },
-            { icon: '♿', title: 'WCAG Contrast', desc: 'Check AA/AAA compliance for any color pair. Know your accessibility scores.' },
-            { icon: '👁', title: 'Color Blind Sim', desc: 'Preview palettes through 4 types of color vision deficiency.' },
-            { icon: '📦', title: 'Export Anywhere', desc: 'CSS variables, Tailwind config, SCSS, or JSON. One click.' },
-          ].map((f, i) => (
-            <div key={i} className="bg-[#111113] border border-zinc-800/50 rounded-xl p-4">
-              <div className="text-2xl mb-2">{f.icon}</div>
-              <h3 className="text-sm font-semibold text-zinc-200 mb-1">{f.title}</h3>
-              <p className="text-xs text-zinc-500 leading-relaxed">{f.desc}</p>
-            </div>
-          ))}
-        </section>
+            { icon: Zap, title: '7 Harmony Rules', desc: 'Complementary, analogous, triadic, and more' },
+            { icon: Accessibility, title: 'WCAG Contrast', desc: 'AA/AAA compliance for every pair' },
+            { icon: Eye, title: 'Color Blind Sim', desc: '4 types of vision deficiency preview' },
+            { icon: Code2, title: 'Export Anywhere', desc: 'CSS, Tailwind, SCSS, or JSON' },
+          ].map((f, i) => {
+            const Icon = f.icon;
+            return (
+              <div key={i} className="flex-1 bg-[#111113] px-4 py-3.5 border-r border-[#1e1e21] last:border-r-0">
+                <Icon size={14} className="text-zinc-500 mb-2" />
+                <h3 className="text-[11px] font-display font-semibold text-zinc-200 mb-0.5">{f.title}</h3>
+                <p className="text-[10px] text-zinc-600 leading-relaxed">{f.desc}</p>
+              </div>
+            );
+          })}
+        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-800/50 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex items-center justify-between text-xs text-zinc-600">
-          <span>© 2026 ColorCraft — Built by AltCorp</span>
-          <span>Press <kbd className="bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-zinc-400">Space</kbd> to regenerate</span>
+      {/* Minimal footer */}
+      <footer className="border-t border-[#1e1e21] mt-8">
+        <div className="max-w-[1400px] mx-auto px-5 py-4 flex items-center justify-between text-[10px] text-zinc-600 font-mono">
+          <span>colorcraft — altcorp 2026</span>
+          <span>100% client-side · no data leaves your browser</span>
         </div>
       </footer>
     </div>

@@ -5,9 +5,17 @@
   --surface: #111113;
   --surface-2: #18181b;
   --border: #27272a;
+  --border-subtle: #1e1e21;
   --fg: #fafafa;
+  --fg-2: #d4d4d8;
   --muted: #71717a;
+  --dim: #52525b;
   --teal: #14b8a6;
+  --teal-dim: #0d9488;
+  --sky: #0ea5e9;
+  --green: #22c55e;
+  --amber: #f59e0b;
+  --red: #ef4444;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -15,24 +23,42 @@
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
 }
 
-::selection { background: color-mix(in srgb, var(--teal) 30%, transparent); }
+::selection { background: color-mix(in srgb, var(--teal) 25%, transparent); }
 
-/* Color input styling */
+/* Precise scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Color input */
 input[type="color"] { -webkit-appearance: none; border: none; cursor: pointer; background: transparent; }
 input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-input[type="color"]::-webkit-color-swatch { border: none; border-radius: 8px; }
+input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-
-/* Range slider */
+/* Range slider — minimal chrome */
 input[type="range"] { -webkit-appearance: none; background: transparent; cursor: pointer; }
-input[type="range"]::-webkit-slider-track { height: 4px; background: var(--border); border-radius: 2px; }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--teal); margin-top: -6px; border: 2px solid var(--bg); }
+input[type="range"]::-webkit-slider-track { height: 3px; background: var(--border); border-radius: 1px; }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--fg);
+  margin-top: -5.5px;
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 1.5px solid var(--teal);
+  outline-offset: 2px;
+}
+
+/* Mono values */
+.font-mono { font-family: var(--font-mono), monospace; }
+.font-display { font-family: var(--font-display), sans-serif; }

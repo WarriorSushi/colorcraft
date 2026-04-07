@@ -18,9 +18,7 @@ export default function ColorEditor({ color, onChange, index }: ColorEditorProps
 
   const handleHexInput = useCallback((val: string) => {
     setHexInput(val);
-    if (/^#[0-9a-fA-F]{6}$/.test(val)) {
-      onChange(val.toLowerCase());
-    }
+    if (/^#[0-9a-fA-F]{6}$/.test(val)) onChange(val.toLowerCase());
   }, [onChange]);
 
   const handleHslChange = useCallback((key: 'h' | 's' | 'l', value: number) => {
@@ -34,30 +32,29 @@ export default function ColorEditor({ color, onChange, index }: ColorEditorProps
   }, [rgb, onChange]);
 
   return (
-    <div className="bg-[#111113] border border-zinc-800 rounded-xl p-5 space-y-5">
-      {/* Color preview + name */}
+    <div className="space-y-4">
+      {/* Color preview — inline, not a card */}
       <div className="flex items-center gap-4">
         <div
-          className="w-16 h-16 rounded-xl border border-zinc-700 shadow-inner flex items-center justify-center text-xs font-mono font-bold shrink-0"
+          className="w-12 h-12 rounded-lg flex items-center justify-center text-[11px] font-mono font-bold shrink-0 border border-[#1e1e21]"
           style={{ backgroundColor: color, color: textColorForBg(color) }}
         >
           {index + 1}
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-zinc-100">{name}</h3>
-          <p className="text-xs text-zinc-500 font-mono mt-0.5">{color.toUpperCase()}</p>
-          <p className="text-xs text-zinc-600 mt-0.5">HSL({hsl.h}°, {hsl.s}%, {hsl.l}%)</p>
+          <div className="text-[13px] font-display font-semibold text-zinc-100">{name}</div>
+          <div className="text-[11px] font-mono text-zinc-500">{color.toUpperCase()} · HSL({hsl.h}, {hsl.s}%, {hsl.l}%) · RGB({rgb.r}, {rgb.g}, {rgb.b})</div>
         </div>
       </div>
 
-      {/* Mode tabs */}
-      <div className="flex gap-1 bg-[#0a0a0b] rounded-lg p-1">
+      {/* Mode switcher — underline tabs, not pill tabs */}
+      <div className="flex gap-0 border-b border-[#1e1e21]">
         {(['hsl', 'rgb', 'hex'] as const).map(m => (
           <button
             key={m}
             onClick={() => { setMode(m); if (m === 'hex') setHexInput(color); }}
-            className={`flex-1 py-1.5 px-3 rounded-md text-xs font-medium uppercase tracking-wider transition-colors ${
-              mode === m ? 'bg-teal-500/20 text-teal-400' : 'text-zinc-500 hover:text-zinc-300'
+            className={`px-3 py-2 text-[11px] font-mono uppercase tracking-wider border-b-[1.5px] -mb-px transition-colors ${
+              mode === m ? 'border-teal-500 text-zinc-100' : 'border-transparent text-zinc-600 hover:text-zinc-400'
             }`}
           >
             {m}
@@ -65,94 +62,82 @@ export default function ColorEditor({ color, onChange, index }: ColorEditorProps
         ))}
       </div>
 
-      {/* Sliders */}
-      {mode === 'hsl' && (
-        <div className="space-y-4">
-          <SliderRow label="Hue" value={hsl.h} max={360} unit="°"
-            gradient={`linear-gradient(to right, hsl(0,${hsl.s}%,${hsl.l}%), hsl(60,${hsl.s}%,${hsl.l}%), hsl(120,${hsl.s}%,${hsl.l}%), hsl(180,${hsl.s}%,${hsl.l}%), hsl(240,${hsl.s}%,${hsl.l}%), hsl(300,${hsl.s}%,${hsl.l}%), hsl(360,${hsl.s}%,${hsl.l}%))`}
-            onChange={(v) => handleHslChange('h', v)}
-          />
-          <SliderRow label="Saturation" value={hsl.s} max={100} unit="%"
-            gradient={`linear-gradient(to right, hsl(${hsl.h},0%,${hsl.l}%), hsl(${hsl.h},100%,${hsl.l}%))`}
-            onChange={(v) => handleHslChange('s', v)}
-          />
-          <SliderRow label="Lightness" value={hsl.l} max={100} unit="%"
-            gradient={`linear-gradient(to right, hsl(${hsl.h},${hsl.s}%,0%), hsl(${hsl.h},${hsl.s}%,50%), hsl(${hsl.h},${hsl.s}%,100%))`}
-            onChange={(v) => handleHslChange('l', v)}
-          />
-        </div>
-      )}
+      {/* Sliders — clean, tight */}
+      <div className="space-y-3.5">
+        {mode === 'hsl' && (
+          <>
+            <SliderRow label="H" value={hsl.h} max={360} suffix="°"
+              track={`linear-gradient(to right, hsl(0,${hsl.s}%,${hsl.l}%), hsl(60,${hsl.s}%,${hsl.l}%), hsl(120,${hsl.s}%,${hsl.l}%), hsl(180,${hsl.s}%,${hsl.l}%), hsl(240,${hsl.s}%,${hsl.l}%), hsl(300,${hsl.s}%,${hsl.l}%), hsl(360,${hsl.s}%,${hsl.l}%))`}
+              onChange={(v) => handleHslChange('h', v)} />
+            <SliderRow label="S" value={hsl.s} max={100} suffix="%"
+              track={`linear-gradient(to right, hsl(${hsl.h},0%,${hsl.l}%), hsl(${hsl.h},100%,${hsl.l}%))`}
+              onChange={(v) => handleHslChange('s', v)} />
+            <SliderRow label="L" value={hsl.l} max={100} suffix="%"
+              track={`linear-gradient(to right, hsl(${hsl.h},${hsl.s}%,0%), hsl(${hsl.h},${hsl.s}%,50%), hsl(${hsl.h},${hsl.s}%,100%))`}
+              onChange={(v) => handleHslChange('l', v)} />
+          </>
+        )}
 
-      {mode === 'rgb' && (
-        <div className="space-y-4">
-          <SliderRow label="Red" value={rgb.r} max={255} unit=""
-            gradient={`linear-gradient(to right, rgb(0,${rgb.g},${rgb.b}), rgb(255,${rgb.g},${rgb.b}))`}
-            onChange={(v) => handleRgbChange('r', v)}
-          />
-          <SliderRow label="Green" value={rgb.g} max={255} unit=""
-            gradient={`linear-gradient(to right, rgb(${rgb.r},0,${rgb.b}), rgb(${rgb.r},255,${rgb.b}))`}
-            onChange={(v) => handleRgbChange('g', v)}
-          />
-          <SliderRow label="Blue" value={rgb.b} max={255} unit=""
-            gradient={`linear-gradient(to right, rgb(${rgb.r},${rgb.g},0), rgb(${rgb.r},${rgb.g},255))`}
-            onChange={(v) => handleRgbChange('b', v)}
-          />
-        </div>
-      )}
+        {mode === 'rgb' && (
+          <>
+            <SliderRow label="R" value={rgb.r} max={255} suffix=""
+              track={`linear-gradient(to right, rgb(0,${rgb.g},${rgb.b}), rgb(255,${rgb.g},${rgb.b}))`}
+              onChange={(v) => handleRgbChange('r', v)} />
+            <SliderRow label="G" value={rgb.g} max={255} suffix=""
+              track={`linear-gradient(to right, rgb(${rgb.r},0,${rgb.b}), rgb(${rgb.r},255,${rgb.b}))`}
+              onChange={(v) => handleRgbChange('g', v)} />
+            <SliderRow label="B" value={rgb.b} max={255} suffix=""
+              track={`linear-gradient(to right, rgb(${rgb.r},${rgb.g},0), rgb(${rgb.r},${rgb.g},255))`}
+              onChange={(v) => handleRgbChange('b', v)} />
+          </>
+        )}
 
-      {mode === 'hex' && (
-        <div>
-          <label className="text-xs text-zinc-500 mb-1.5 block">Hex Value</label>
+        {mode === 'hex' && (
           <input
             type="text"
             value={hexInput}
             onChange={(e) => handleHexInput(e.target.value)}
-            className="w-full bg-[#0a0a0b] border border-zinc-800 rounded-lg px-3 py-2.5 text-sm font-mono text-zinc-100 focus:outline-none focus:border-teal-500/50 focus:ring-1 focus:ring-teal-500/20"
+            className="w-full bg-transparent border border-[#27272a] rounded-lg px-3 py-2 text-[13px] font-mono text-zinc-100 focus:outline-none focus:border-teal-500/40"
             placeholder="#14b8a6"
             maxLength={7}
           />
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* Native color picker */}
-      <div>
-        <label className="text-xs text-zinc-500 mb-1.5 block">Color Picker</label>
+      {/* Native picker — small, secondary */}
+      <div className="flex items-center gap-3">
+        <span className="text-[10px] text-zinc-600 font-mono uppercase tracking-wider">Picker</span>
         <input
           type="color"
           value={color}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full h-10 rounded-lg cursor-pointer border border-zinc-800"
+          className="w-8 h-8 rounded-md cursor-pointer border border-[#27272a]"
         />
       </div>
     </div>
   );
 }
 
-function SliderRow({ label, value, max, unit, gradient, onChange }: {
-  label: string; value: number; max: number; unit: string; gradient: string;
+function SliderRow({ label, value, max, suffix, track, onChange }: {
+  label: string; value: number; max: number; suffix: string; track: string;
   onChange: (v: number) => void;
 }) {
   return (
-    <div>
-      <div className="flex items-center justify-between mb-1.5">
-        <span className="text-xs text-zinc-500">{label}</span>
-        <span className="text-xs font-mono text-zinc-400">{value}{unit}</span>
-      </div>
-      <div className="relative">
-        <div className="h-2 rounded-full" style={{ background: gradient }} />
+    <div className="flex items-center gap-3">
+      <span className="text-[10px] font-mono text-zinc-600 w-3 shrink-0">{label}</span>
+      <div className="flex-1 relative h-3 flex items-center">
+        <div className="absolute inset-0 h-[3px] top-1/2 -translate-y-1/2 rounded-full" style={{ background: track }} />
         <input
-          type="range"
-          min={0}
-          max={max}
-          value={value}
+          type="range" min={0} max={max} value={value}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="absolute inset-0 w-full opacity-0 cursor-pointer h-full"
+          className="absolute inset-0 w-full opacity-0 cursor-pointer"
         />
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border-2 border-zinc-900 shadow-md pointer-events-none"
-          style={{ left: `calc(${(value / max) * 100}% - 8px)` }}
+          className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 border-[#0a0a0b] shadow-sm pointer-events-none"
+          style={{ left: `calc(${(value / max) * 100}% - 7px)` }}
         />
       </div>
+      <span className="text-[10px] font-mono text-zinc-400 w-10 text-right tabular-nums">{value}{suffix}</span>
     </div>
   );
 }
