@@ -51,14 +51,14 @@ export default function ExportPanel({ colors }: ExportPanelProps) {
   };
 
   return (
-    <div className="bg-[#111113] border border-zinc-800 rounded-xl p-5 space-y-4">
+    <div className="bg-[#111113] border border-zinc-800 rounded-xl p-4 sm:p-5 space-y-4">
       <h3 className="text-sm font-semibold text-zinc-100 flex items-center gap-2">
         <Code size={16} className="text-teal-500" />
         Export
       </h3>
 
       {/* Format tabs */}
-      <div className="flex gap-1 bg-[#0a0a0b] rounded-lg p-1">
+      <div className="grid grid-cols-2 sm:flex gap-1 bg-[#0a0a0b] rounded-lg p-1">
         {FORMATS.map(f => (
           <button
             key={f.value}

@@ -75,15 +75,15 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0b]">
-      {/* Compact header — tool-like, not website-like */}
+      {/* Header — safe padding on all screens */}
       <header className="border-b border-[#1e1e21] sticky top-0 z-40 bg-[#0a0a0b]/95 backdrop-blur-sm">
-        <div className="max-w-[1400px] mx-auto px-5 h-12 flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Palette size={17} className="text-teal-500" />
             <span className="text-[13px] font-display font-semibold text-zinc-100 tracking-tight">ColorCraft</span>
             <span className="text-[10px] text-zinc-600 font-mono ml-1 hidden sm:inline">v1.0</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <span className="hidden md:flex items-center gap-1 text-[10px] text-zinc-600 font-mono">
               <kbd className="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-500 border border-zinc-800">Space</kbd>
               regenerate
@@ -99,22 +99,22 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="max-w-[1400px] mx-auto px-5 py-5 space-y-5">
-        {/* Controls — tight, tool-bar feel */}
+      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 space-y-4 sm:space-y-5">
+        {/* Controls */}
         <div className="flex flex-col sm:flex-row gap-2.5">
           <div className="flex-1">
             <HarmonySelector value={harmony} onChange={handleHarmonyChange} />
           </div>
           <button
             onClick={regenerate}
-            className="flex items-center justify-center gap-2 bg-zinc-100 hover:bg-white text-zinc-900 font-medium font-display rounded-lg px-5 py-2 text-[13px] transition-all active:scale-[0.98]"
+            className="flex items-center justify-center gap-2 bg-zinc-100 hover:bg-white text-zinc-900 font-medium font-display rounded-lg px-5 py-2.5 sm:py-2 text-[13px] transition-all active:scale-[0.98]"
           >
             <Shuffle size={14} />
             Generate
           </button>
         </div>
 
-        {/* THE PALETTE — this is the hero, tall and dominant */}
+        {/* THE PALETTE — responsive: horizontal scroll on mobile, grid on desktop */}
         <PaletteBar
           colors={colors}
           locked={locked}
@@ -125,15 +125,15 @@ export default function HomePage() {
           selectedIndex={selectedIndex}
         />
 
-        {/* Tab bar — compact, left-aligned */}
-        <div className="flex items-center gap-0.5 border-b border-[#1e1e21]">
+        {/* Tab bar — scrollable on mobile */}
+        <div className="flex items-center gap-0.5 border-b border-[#1e1e21] overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
           {TABS.map(tab => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-3.5 py-2.5 text-[12px] font-medium transition-colors border-b-[1.5px] -mb-px ${
+                className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2.5 text-[12px] font-medium transition-colors border-b-[1.5px] -mb-px whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'border-teal-500 text-zinc-100'
                     : 'border-transparent text-zinc-500 hover:text-zinc-300'
@@ -146,8 +146,8 @@ export default function HomePage() {
           })}
         </div>
 
-        {/* Content — asymmetric 2/3 + 1/3 layout */}
-        <div className="grid lg:grid-cols-[1fr_320px] gap-5">
+        {/* Content — stacks on mobile, side-by-side on desktop */}
+        <div className="grid lg:grid-cols-[1fr_320px] gap-4 sm:gap-5">
           <div>
             {activeTab === 'editor' && (
               <ColorEditor
@@ -169,8 +169,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Feature strip — horizontal, dense, not a card grid */}
-        <div className="flex items-stretch gap-px mt-6 rounded-lg overflow-hidden border border-[#1e1e21]">
+        {/* Feature strip — stacks on mobile, horizontal on desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-px mt-4 sm:mt-6 rounded-lg overflow-hidden border border-[#1e1e21]">
           {[
             { icon: Zap, title: '7 Harmony Rules', desc: 'Complementary, analogous, triadic, and more' },
             { icon: Accessibility, title: 'WCAG Contrast', desc: 'AA/AAA compliance for every pair' },
@@ -179,8 +179,8 @@ export default function HomePage() {
           ].map((f, i) => {
             const Icon = f.icon;
             return (
-              <div key={i} className="flex-1 bg-[#111113] px-4 py-3.5 border-r border-[#1e1e21] last:border-r-0">
-                <Icon size={14} className="text-zinc-500 mb-2" />
+              <div key={i} className="bg-[#111113] px-3.5 sm:px-4 py-3 sm:py-3.5">
+                <Icon size={14} className="text-zinc-500 mb-1.5 sm:mb-2" />
                 <h3 className="text-[11px] font-display font-semibold text-zinc-200 mb-0.5">{f.title}</h3>
                 <p className="text-[10px] text-zinc-600 leading-relaxed">{f.desc}</p>
               </div>
@@ -189,9 +189,9 @@ export default function HomePage() {
         </div>
       </main>
 
-      {/* Minimal footer */}
-      <footer className="border-t border-[#1e1e21] mt-8">
-        <div className="max-w-[1400px] mx-auto px-5 py-4 flex items-center justify-between text-[10px] text-zinc-600 font-mono">
+      {/* Footer — wraps on mobile */}
+      <footer className="border-t border-[#1e1e21] mt-6 sm:mt-8">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-1 text-[10px] text-zinc-600 font-mono">
           <span>colorcraft — altcorp 2026</span>
           <span>100% client-side · no data leaves your browser</span>
         </div>

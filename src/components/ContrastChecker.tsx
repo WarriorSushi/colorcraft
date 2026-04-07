@@ -93,7 +93,7 @@ export default function ContrastChecker({ colors }: ContrastCheckerProps) {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-4 pt-2 border-t border-zinc-800/50 text-[10px]">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-4 pt-2 border-t border-zinc-800/50 text-[10px]">
         <span className="text-zinc-600">WCAG Levels:</span>
         <span style={{ color: '#22c55e' }}>AAA ≥ 7:1</span>
         <span style={{ color: '#14b8a6' }}>AA ≥ 4.5:1</span>

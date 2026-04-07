@@ -43,7 +43,11 @@ export default function ColorEditor({ color, onChange, index }: ColorEditorProps
         </div>
         <div>
           <div className="text-[13px] font-display font-semibold text-zinc-100">{name}</div>
-          <div className="text-[11px] font-mono text-zinc-500">{color.toUpperCase()} · HSL({hsl.h}, {hsl.s}%, {hsl.l}%) · RGB({rgb.r}, {rgb.g}, {rgb.b})</div>
+          <div className="text-[10px] sm:text-[11px] font-mono text-zinc-500 break-all sm:break-normal">
+            <span>{color.toUpperCase()}</span>
+            <span className="hidden sm:inline"> · HSL({hsl.h}, {hsl.s}%, {hsl.l}%) · RGB({rgb.r}, {rgb.g}, {rgb.b})</span>
+            <span className="sm:hidden block mt-0.5 text-zinc-600">HSL({hsl.h}, {hsl.s}%, {hsl.l}%)</span>
+          </div>
         </div>
       </div>
 
