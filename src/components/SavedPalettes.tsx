@@ -43,7 +43,7 @@ export default function SavedPalettes({ currentColors, currentHarmony, onLoad }:
   };
 
   return (
-    <div className="bg-[#111113] border border-zinc-800 rounded-xl p-5 space-y-4">
+    <div className="bg-[#111113] border border-zinc-800 rounded-xl p-4 sm:p-5 space-y-4">
       <button
         onClick={() => setExpanded(!expanded)}
         className="flex items-center justify-between w-full"

@@ -125,8 +125,8 @@ export default function HomePage() {
           selectedIndex={selectedIndex}
         />
 
-        {/* Tab bar — scrollable on mobile */}
-        <div className="flex items-center gap-0.5 border-b border-[#1e1e21] overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+        {/* Tab bar */}
+        <div className="flex items-center gap-0.5 border-b border-[#1e1e21]">
           {TABS.map(tab => {
             const Icon = tab.icon;
             return (
